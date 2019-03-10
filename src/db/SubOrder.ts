@@ -1,8 +1,6 @@
 import { prop, Typegoose, Ref, post, pre } from "typegoose";
 import User from "./User";
 import Item from "./Item";
-import { concat } from "async";
-import * as moment from "jalali-moment";
 class Order extends Typegoose { }
 
 @pre<SubOrder>('save', function (next) {

@@ -1,8 +1,6 @@
 import { prop, Typegoose, arrayProp, Ref, pre, post } from "typegoose";
 import User from "./User";
 import SubOrder from "./SubOrder";
-import { concat } from "async";
-import * as moment from "jalali-moment";
 
 @pre<Order>('save', function (next) {
     if (!this.created_at) {

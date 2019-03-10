@@ -10,5 +10,4 @@ export function deCode(token: string): any {
     } catch (error) {
         return null;
     }
-
 }

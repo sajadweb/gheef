@@ -1,8 +1,6 @@
 import { prop, Typegoose, Ref, pre, post } from "typegoose";
 import User from "./User";
-import { Int32 } from "bson";
-import { concat } from "async";
-import * as moment from "jalali-moment";
+import { Int32 } from "bson"; 
 class Product extends Typegoose { }
 
 @pre<Price>('save', function (next) {

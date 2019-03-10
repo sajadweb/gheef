@@ -1,8 +1,6 @@
 // import * as Request from "request-promise";
 import * as  Kavenegar from "kavenegar";
 
-// tslint:disable:typedef
-
 const kavenegarApi = Kavenegar.KavenegarApi({
     apikey: process.env.SMS_KEY
 });
@@ -35,9 +33,12 @@ export function random(length: number) {
         throw new Error("Length must be at least 1 , generate-sms-verification-code/index.js")
     }
     let possible = "0123456789";
-    let string = "";
-    for (let i = 0; i < length; i++) {
-        string += possible.charAt(Math.floor(Math.random() * possible.length))
+    let rand = "123456789";
+    let string = rand.charAt(Math.floor(Math.random() * rand.length));; 
+    for (let i = 0; i < length-1; i++) {
+        const char=possible.charAt(Math.floor(Math.random() * possible.length));
+        string += char; 
     }
+   
     return parseFloat(string);
 }
