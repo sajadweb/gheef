@@ -1,0 +1,60 @@
+type Query { 
+
+"""لیست کل محصولات"""
+  products(count:Offset,page:Int,search:String): [Product]
+
+"""لیست  محصولات به صورت صفحه بندی و قابلت جستجو میتوانید"""
+  paginationProducts(count:Offset,page:Int,search:String): PaginationProduct
+
+"""مشاهده یک محصول"""
+  product(id: ID): Product
+"""اخرین سفارشات در قسمت مدیریت"""
+  prices(id:ID!): [Price]
+
+}
+
+type Mutation {
+ 
+""" """
+  newProduct(name: String,commission: String, photo: [String],description: String, categories: [ID]): Product
+""" """
+  editProduct(id:ID,name: String,commission: String, photo: [String],description: String, categories: [ID]): Product
+""" """
+  deleteProduct(id:ID): Boolean
+""" """
+  deletePhotoProduct(id:ID, photo: String): Boolean
+}
+
+
+
+type Price {
+  id: ID!  
+  provider: User
+  price: String
+  created_at: String
+}
+
+type Product {
+  id: ID!  
+  name: String
+  commission: String
+  publish: Boolean
+  photo: [String]
+  description: String
+  categories: [Category]
+  prices: [Price]
+  created_at: String
+  updated_at: String
+}
+
+
+type PaginationProduct {
+  data: [Product]
+  total: Int
+  totalData: Int
+  totalPages: Int
+  limit: Int
+  page: Int
+  nextPage: Int
+  prevPage: Int
+}  

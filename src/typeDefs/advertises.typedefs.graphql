@@ -1,0 +1,36 @@
+type Query {
+"""لیست تبلیغات سایت مشخص میکند"""
+  advertises(offset:Offset,limit:Int,search:String): PaginationAdvertise
+}
+
+type Mutation {
+""" """
+  addAds(title: String,link: String,photo:String,status:Int): Boolean
+""" """
+  editAds(id:ID,title: String,link: String,photo:String,status:Int): Boolean
+""" """
+  deleteAds(id:ID): Boolean
+}
+
+type Advertise{
+  id: ID 
+  title: String 
+  path: String 
+  link: String 
+  status: Int 
+}
+
+type PaginationAdvertise {
+  data: [Advertise]
+  total: Int
+  totalData: Int
+  totalPages: Int
+  limit: Int
+  page: Int
+  nextPage: Int
+  prevPage: Int
+}  
+
+type Subscription {
+  newAdvertise: Advertise!
+}

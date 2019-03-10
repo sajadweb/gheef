@@ -1,0 +1,72 @@
+type Query {
+""" با ارسال توکن سیستم تشخیص میدهد که چه کاربری میباشدو پروفایل تان را برای شما ارسال میکند"""
+  me: User
+"""لیست کاربران سایت مشخص میکند"""
+  users(offset:Offset,limit:Int,search:String): [User]
+}
+
+type Mutation {
+""" upgradeToProvider"""
+  upgradeToProvider: Boolean!
+  
+""" userSignIn"""
+  userSignIn(mobile: String!): Boolean!
+
+""" userSignUp """
+  userSignUp(firstName: String,lastName: String,mobile: String!):Boolean!
+  
+""" userVerify """
+  userVerify(mobile: String!,code: String!): Verify!
+
+""" saveProfileShop """
+  saveProfileShop(postal_code: String,  shaba: String, name: String, mali: String , phone: String , type_estate: ID,categories: [ID] ,address: String, province: ID , city: ID , area: ID,lat: Float,long: Float ): Boolean
+
+}
+type PaginationUser {
+  data: [User]
+  total: Int
+  totalData: Int
+  totalPages: Int
+  limit: Int
+  page: Int
+  nextPage: Int
+  prevPage: Int
+}   
+
+type User { 
+  id: ID! 
+  mobile: String 
+  status: Int
+  firstName: String! 
+  lastName: String! 
+  permission: [String] 
+  categories: [Category] 
+  profile: Profile 
+  
+}
+
+
+type Verify{
+  token: String
+  data: User
+}
+
+
+type Location{
+  lat: Float
+  long: Float
+}
+type Profile {
+    shaba: String
+    shop_name: String
+    mali: String
+    phone: String
+    address: String
+    postal_code: String
+    type_estate:  TypeEstate 
+    province: Province 
+    location: Location 
+    city: City
+    area: Area
+}
+

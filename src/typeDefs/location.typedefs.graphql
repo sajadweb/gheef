@@ -1,0 +1,51 @@
+type Query {
+"""لیست  استان ها"""
+  provinces: [Province]
+"""لیست  شهر ها"""
+  cities(province: ID): [City]
+"""لیست  ناحیه ها"""
+  areas(city: ID): [Area]
+}
+
+
+type Mutation {
+""" """
+  editProvince(id: ID!,name: String!): Province!
+""" """
+  newProvince(name: String!): Province!
+""" حذف استان"""
+  deleteProvince(id: ID): Boolean
+
+""" """
+  editCity(id: ID,name: String, province: ID!): City!
+""" """
+  newCity(name: String!,province: ID): City!
+""" حذف شهر"""
+  deleteCity(id: ID): Boolean
+
+""" """
+  editArea(id: ID,name: String,province: ID!,city: ID!): Area
+""" """
+  newArea(name: String!,province: ID,city: ID): Area 
+""" حذف ناحیه"""
+  deleteArea(id: ID): Boolean
+
+}
+
+type Province {
+  id: ID!  
+  name: String
+}
+
+type City {
+  id: ID!  
+  province: Province
+  name: String
+}
+
+type Area {
+  id: ID!  
+  city: City
+  province: Province
+  name: String
+}

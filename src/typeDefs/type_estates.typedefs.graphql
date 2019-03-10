@@ -1,0 +1,8 @@
+type Query {
+  type_estates: [TypeEstate]
+}
+
+type TypeEstate { 
+  id: ID!  
+  title: String!
+} 

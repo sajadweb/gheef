@@ -1,0 +1,24 @@
+type Query {
+"""لیست دسته بندی سایت  را مشخص میکند"""
+  categories(type:TypeCategory,parent: ID): [Category]
+}
+
+type Mutation {
+ 
+""" """
+  deleteCategory(id: ID): Boolean
+""" """
+  editCategory(id: ID,title: String,parent: ID): Category
+""" """
+  newCategory(title: String,parent: ID): Category
+}
+enum TypeCategory {
+    Parent
+    Children
+}
+
+type Category { 
+  id: ID!  
+  title: String!
+  parent: Category
+} 

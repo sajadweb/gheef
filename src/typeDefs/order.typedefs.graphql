@@ -1,0 +1,76 @@
+type Query { 
+"""سفارشات یک فروشگاه براساس اخرین سفارش"""
+  ordersShop(count:Offset,page:Int): PaginationOrder
+"""سفارشات یک تامیین براساس اخرین سفارش"""
+  ordersProvider(count:Offset,page:Int): PaginationSubOrder
+"""اخرین سفارشات در قسمت مدیریت"""
+  orders(count:Offset,page:Int): PaginationSubOrder
+"""مشاهده یک سفارش"""
+  order(id:ID): Order
+"""مشاهده یک سفارش"""
+  oneOrder(id:ID): Order
+
+}
+
+type Mutation {
+ 
+""" add PriceIn Product """
+  addPriceInProduct(price: String,product: ID): Boolean
+""" addProductInOrder """
+  addProductInOrder(price: ID,product: ID,count: Int,order:ID): Boolean
+""" changeStatus """
+  changeStatus(id:ID,status:Int): Boolean
+}
+
+
+type Item{
+    counter: Int
+    product: Product
+    price: Price
+}
+
+type SubOrder{
+    id: ID!  
+    items: [Item]
+    provider: User
+    order: Order
+    created_at: String
+    updated_at: String
+}
+
+type Order {
+  id: ID!  
+  shop: User
+  priceAll: String
+  discount: String
+  status: Int
+  details: [SubOrder]
+  created_at: String
+  updated_at: String
+}
+
+ 
+
+ 
+   
+type PaginationSubOrder {
+  data: [SubOrder]
+  total: Int
+  totalData: Int
+  totalPages: Int
+  limit: Int
+  page: Int
+  nextPage: Int
+  prevPage: Int
+}   
+
+type PaginationOrder {
+  data: [Order]
+  total: Int
+  totalData: Int
+  totalPages: Int
+  limit: Int
+  page: Int
+  nextPage: Int
+  prevPage: Int
+}

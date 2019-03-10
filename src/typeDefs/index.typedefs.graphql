@@ -1,0 +1,14 @@
+"""تعداد دیتا در یک لیست رو مشخص میکنه"""
+enum Offset {
+    Five
+    Ten
+    Fifteen
+    Twenty
+    TwentyFive
+    Fifty
+    Hundred
+}
+
+ 
+
+
