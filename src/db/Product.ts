@@ -70,8 +70,8 @@ class Product extends Typegoose {
     @prop()
     updated_at?: String;
 
-    @prop()
-    deleted_at?: String;
+    @prop({default:null})
+    deleted_at: String;
 }
 
 export default Product;

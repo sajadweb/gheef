@@ -1,4 +1,4 @@
-import { hasPermission, checkPermission, Offset, ProductsInputType, Auth } from "../tools";
+import { hasPermission, checkPermission, Offset, ProductsInputType, Auth, Log } from "../tools";
 import * as async from "async";
 export default {
     Query: {
@@ -7,13 +7,19 @@ export default {
 
             const Product = models.Product;
 
-            const product = await Product.findById(args.id)
+            const product = await Product.findOne({
+                _id: args.id,
+                deleted_at: null
+            })
                 .populate("categories")
                 .populate({
                     path: "prices",
                     populate: { path: "provider" }
                 })
                 .exec();
+            if (!product) {
+                throw Error("محصول مورد نظر یافت نشد");
+            }
             return product;
         },
 
@@ -22,7 +28,9 @@ export default {
             const count = args.count ? parseInt(Offset[args.count]) : 15;
             const page = args.page ? parseInt(`${args.page}`) - 1 : 0;
             const Product = models.Product;
-            let options = {};
+            let options = {
+                deleted_at: null
+            };
             if (checkPermission(request.user, "SHOP")) {
                 options['prices'] = { $not: { $size: 0 } };
                 options["categories"] = { $in: request.user.categories };
@@ -48,13 +56,15 @@ export default {
         },
 
         async paginationProducts(parent, args: ProductsInputType, { models, request }, info) {
-            console.time("start")
+            console.time("paginationProducts")
             hasPermission(request.user, ["ADMIN", "SHOP", "PROVIDER"]);
             const count = args.count ? parseInt(Offset[args.count]) : 15;
             const inPage = args.page ? args.page > 0 ? parseInt(`${args.page}`) : 0 : 0;
             const page = inPage > 0 ? inPage - 1 : 0;
             const Product = models.Product;
-            let options = {};
+            let options = {
+                deleted_at: null
+            };
             if (checkPermission(request.user, "SHOP")) {
                 options['prices'] = { $not: { $size: 0 } };
                 options["categories"] = { $in: request.user.categories };
@@ -79,9 +89,10 @@ export default {
             let res2 = Product.countDocuments(options);
             const products = await res1;
             const counts = await res2;
+
             const totalPages = counts / count
             const floor = Math.floor(totalPages);
-            console.timeEnd("start")
+            console.timeEnd("paginationProducts")
             return {
                 data: products,
                 total: counts,
@@ -96,7 +107,7 @@ export default {
 
 
         async prices(parent, args, { models, request }, info) {
-            hasPermission(request.user, ["SHOP", "PROVIDER","ADMIN"]);
+            hasPermission(request.user, ["SHOP", "PROVIDER", "ADMIN"]);
             const Price = models.Price;
             const price = await Price.find({
                 product: args.id
@@ -147,7 +158,10 @@ export default {
             hasPermission(request.user, ["ADMIN", "SHOP"]);
             //find by id
             const Product = models.Product;
-            const find = await Product.findById(args.id);
+            const find = await Product.findOne({
+                _id: args.id,
+                deleted_at: null
+            });
             if (!find) {
                 throw Error("محصول مورد نظر یافت نشد");
             }
@@ -175,6 +189,7 @@ export default {
             //find by id
             const Product = models.Product;
             const find = await Product.findById(args.id);
+            // Log("find deleteProduct",find);
             if (!find) {
                 throw Error("محصول مورد نظر یافت نشد");
             }
