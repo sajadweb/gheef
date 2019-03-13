@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import * as dotenv from "dotenv";
 dotenv.config();
+import * as bodyParser from 'body-parser';
 import * as path from 'path';
 import * as Multer from 'multer';
 import * as FTPStorage from 'multer-ftp';
@@ -8,15 +9,42 @@ import { startDB, models } from './db';
 import createServer from './createServer';
 import { deCode, random, LogCatch, LogApi } from "./tools";
 const db = startDB();
+let getCach: {
+    body?: any,
+    param?: any,
+    header?: any,
+    ip?: any
+    user?: any
+} | any;
 const context = {
     models,
-    db,
-    pubsub: null
+    db
 };
 const server = createServer(context);
+server.express.use(bodyParser.urlencoded({ extended: true }));
+server.express.use(bodyParser.json());
+
+ 
+
 server.express.use(function (req, res, next) {
+    getCach = {};
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+server.express.use(async (req, res, next) => {
+   
+    let inputs = {
+        params: req.params,
+        query: req.query,
+        body: req.body,
+        ip: req.ip,
+        url: req.url,
+        path: req.path,
+        // headers: req.headers,
+    };
+    getCach.body= inputs.body
+    LogApi(`call_api:${JSON.stringify(inputs)}`)
     next();
 });
 
@@ -42,9 +70,14 @@ server.express.use(async (req, res, next) => {
     const user = await User.findById(req["userId"]);
     if (user) {
         req["user"] = user;
+        getCach.user = {
+            mobile: user.mobile,
+            permission: user.permission,
+        }
     }
     next();
 });
+
 // TODO USE express middleware to  populate current user
 server.express.post("/upload", function (req, res, next) {
     if (!req["userId"]) {
@@ -80,7 +113,7 @@ server.express.post("/upload", function (req, res, next) {
             });
 
         } else {
-            const host = process.env.FRONTEND_URL+"/";
+            const host = process.env.FRONTEND_URL + "/";
             const filePath = req.file.path.replace(/\/public_html\//, '');
             let Photo = models.Photo;
             let photos = new Photo({
@@ -108,7 +141,8 @@ server.start({
         credentials: true
     },
     formatError(err: any): any {
-        LogCatch(JSON.stringify(err))
+        getCach.error = err
+        LogCatch(JSON.stringify(getCach))
         return err;
     },
     cacheControl: false,

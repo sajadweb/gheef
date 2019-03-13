@@ -44,7 +44,7 @@ export default {
     },
     Mutation: {
 
-        async  addAds(parent, args: AdvertiseInputType, { pubsub, models }, info) {
+        async  addAds(parent, args: AdvertiseInputType, { models }, info) {
             // hasPermission(request.user, ["ADMIN"]);
             //find by name
             if (!isString(args.title)) {
@@ -66,7 +66,6 @@ export default {
 
 
             if (ads.save()) {
-                pubsub.publish("newAdvertise", { newAdvertise: ads })
                 return true;
             }
             throw Error("مشکلی در ثبت وجود امد");
@@ -114,12 +113,5 @@ export default {
             }
             throw Error("مشکلی در ثبت وجود امد");
         },
-    },
-    Subscription: {
-        newAdvertise: {
-            subscribe: (parent, args, { pubsub }) => {
-                return pubsub.asyncIterator("newAdvertise")
-            },
-        }
     }
 }
