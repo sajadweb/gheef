@@ -115,7 +115,9 @@ export default {
             const count = args.count ? parseInt(Offset[args.count]) : 15;
             const inPage = args.page ? args.page > 0 ? parseInt(`${args.page}`) : 0 : 0;
             const page = inPage > 0 ? inPage - 1 : 0;
-            let options = {};
+            let options = {
+                shop: request.user.id
+            };
             const res1 = Order.find(
                 options, null, {
                     limit: count,
